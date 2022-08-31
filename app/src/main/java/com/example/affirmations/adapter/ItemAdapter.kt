@@ -6,14 +6,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.affirmations.R
 import com.example.affirmations.model.Affirmation
+import com.example.affirmations.model.Anime
 
-class ItemAdapter(
-    private val context: Context,
-    private val dataset: List<Affirmation>
-) : RecyclerView.Adapter<ItemAdapter.ItemViewHolder>() {
+class ItemAdapter(private val context: Context, private var animes : List<Anime> ): RecyclerView.Adapter<ItemAdapter.ItemViewHolder>() {
 
     class ItemViewHolder(private val view: View): RecyclerView.ViewHolder(view) {
         val textView: TextView = view.findViewById(R.id.item_title)
@@ -28,10 +28,19 @@ class ItemAdapter(
     }
 
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
-        val item = dataset[position]
-        holder.textView.text = context.resources.getString(item.stringResourceId)
-        holder.imageView.setImageResource(item.imageResourceId)
+        val imageURL = animes.get(position).imageURL
+        val imageView = holder.imageView
+        holder.textView.text = animes.get(position).name
+        Glide.with(context)
+            .load(imageURL)
+            .into(imageView)
+        holder.itemView.setOnClickListener {
+            Toast.makeText(holder.itemView.context, (position+1).toString(), Toast.LENGTH_SHORT).show()
+        }
+
     }
 
-    override fun getItemCount() = dataset.size
+    override fun getItemCount() : Int {
+        return animes.size
+    }
 }
